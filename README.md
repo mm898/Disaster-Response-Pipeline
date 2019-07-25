@@ -1,5 +1,8 @@
 # Disaster Response Pipeline Project
 
+### summary:
+After disasters, there are several issues that happens. Also, there are a lot of tweets that get posted. Thus, it is hard for organizations to know when a person needing help tweeting. This project will use ETL to help organizations in classifiying messages and knowing if people needs help during disasters.
+
 ### Instructions:
 1. Run the following commands in the project's root directory to set up your database and model.
 
