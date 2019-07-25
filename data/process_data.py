@@ -4,6 +4,15 @@ from sqlalchemy import create_engine
 import pandas as pd
 
 def load_data(messages_filepath, categories_filepath):
+    '''load the data
+
+    Parameters:
+    messages_filepath: the filepath for the messages
+
+    Returns:
+    df: a dataframe that needs to  be cleaned
+    '''
+
     messages = pd.read_csv(messages_filepath)
     categories = pd.read_csv(categories_filepath)
     
@@ -13,6 +22,16 @@ def load_data(messages_filepath, categories_filepath):
 
 
 def clean_data(df):
+    '''clean the dublicate and split the data with semicolumns
+
+    Parameters:
+    df: the dataframe
+
+    Returns:
+    df: a cleaned dataframe without any duplicates
+    '''
+
+    # split the catergories with ;
     categories = df.categories.str.split(';', expand=True)
     
     row = categories.loc[0,:].values
@@ -26,15 +45,21 @@ def clean_data(df):
         # convert column from string to numeric
         categories[column] = categories[column].astype(int)
     
+
     df.drop('categories', axis=1, inplace=True)
-    
     df = pd.concat([df, categories], axis=1)
-    
     df.drop_duplicates(inplace=True)
 
     return df
 
 def save_data(df, database_filename):
+    '''save a dataframe as SQL database
+
+    Parameters:
+    df: the dataframe
+    database_filename: the database name
+    '''
+
     engine = create_engine('sqlite:///{}'.format(database_filename))
     df.to_sql('InsertTableName', engine, index=False)
 

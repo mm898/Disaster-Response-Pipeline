@@ -24,6 +24,17 @@ import pickle
 
 
 def load_data(database_filepath):
+    '''load the data
+
+    Parameters:
+    database_filepath: the filepath for the databease
+
+    Returns:
+    X: the messages or feature columns
+    Y: the category columns
+    categories: categories names
+    '''
+
     engine = create_engine('sqlite:///{}'.format(database_filepath))
     df = pd.read_sql_table('InsertTableName', engine)
     
@@ -37,6 +48,15 @@ def load_data(database_filepath):
 
 
 def tokenize(text):
+    '''tokenize the messages
+
+    Parameters:
+    text: the message that will be tokenize
+
+    Returns:
+    clean_tokens: a cleaned tokens array
+    '''
+
     # Normalize text
     text = re.sub(r"[^a-zA-Z0-9]", " ", text.lower())
     
@@ -56,6 +76,12 @@ def tokenize(text):
 
 
 def build_model():
+    '''build a ML pipeline model
+
+    Returns:
+    model: a ML model
+    '''
+
     pipeline = Pipeline([
         ('vect', CountVectorizer(tokenizer=tokenize)),
         ('tfidf', TfidfTransformer()),
@@ -69,6 +95,12 @@ def build_model():
 
 
 def evaluate_model(model, X_test, Y_test, category_names):
+    '''evaluate the given model
+
+    Parameters:
+    model: the model that needs to be evaluated
+    '''
+
     y_pred = model.predict(X_test)
     
     print(classification_report(Y_test.iloc[:,1:].values, np.array([x[1:] for x in y_pred]), target_names=category_names))
@@ -77,6 +109,9 @@ def evaluate_model(model, X_test, Y_test, category_names):
 
 
 def save_model(model, model_filepath):
+    '''save the model as a pickle file
+    '''
+
     pickle.dump(model, open(model_filepath, 'wb'))
 
 
